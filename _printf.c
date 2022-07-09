@@ -80,4 +80,5 @@ int _printf(const char *format, ...)
 		{	_putchar(format[i]);
 			p_counter++;	}	}
 	va_end(arg);
-	return (p_counter);	}
+	return (p_counter);	
+	}
