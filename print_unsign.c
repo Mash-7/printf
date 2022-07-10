@@ -10,38 +10,21 @@
  */
 int print_unsign(va_list arg)
 {
-	unsigned int v = va_arg(arg, unsigned int);
-	int i = 1, exp = 1;
-	int num, end = v % 10, dig;
+	unsigned int num = va_arg(arg, unsigned int);
+	int count = 0, div = 1;
 
-	v = v / 10;
-	num = v;
-
-	if (end < 0)
+	if (num < 0)
 	{
-		_putchar('-');
+		count += _putchar('-');
 		num = -num;
-		v = -v;
-		end = -end;
-		i++;
 	}
-	if (num > 0)
+	while (num / div > 9)
+		div *= 10;
+	while (div != 0)
 	{
-		while (num / 10 != 0)
-		{
-			exp = exp * 10;
-			num = num / 10;
-		}
-		num = v;
-		while (exp > 0)
-		{
-			dig = num / exp;
-			_putchar (dig + '0');
-			num = num - (dig * exp);
-			exp = exp / 10;
-			i++;
-		}
+		count += _putchar('0' + (num / div));
+		num %= div;
+		div /= 10;
 	}
-	_putchar(end + '0');
-	return (i);
+	return (count);
 }
