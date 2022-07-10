@@ -101,6 +101,18 @@ int _putstr(char *str)
 }
 
 /**
+ * _putchar - writes the character c to the buffer
+ * @c: The character to print
+ *
+ * Return: On success 1.
+ * On error, -1 is returned, and errno is set appropriately.
+ */
+int _putchar(char c)
+{
+	return (write_to_buffer(c, 0));
+}
+
+/**
  * write_to_buffer - Writes a char to the buffer based on an action code
  * @c: The character to write
  * @action: The action to perform (
