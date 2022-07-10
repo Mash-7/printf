@@ -1,23 +1,19 @@
-#include "main.h"
 #include <stdarg.h>
 #include <unistd.h>
-#include <stdlib.h>
-
+#include "main.h"
 /**
-  * find_function - function that finds formats
-  * @format: format (char, dec, , int, string)
-  * Return: 0 success
+  * find_function - function that finds formats for _printf
+  * @format: format (char, string, int, dec)
+  * Return: 0
   */
 
 int (*find_function(const char *format))(va_list)
 {
 	unsigned int i = 0;
-	code_f find_f[] = {
+	code_f find_f[] =
+	{
 		{"c", print_char},
 		{"s", print_string},
-		{"i", print_int},
-		{"d", print_dec},
-		{NULL, NULL}
 	};
 
 	while (find_f[i].sc)
@@ -30,7 +26,7 @@ int (*find_function(const char *format))(va_list)
 }
 
 /**
-  * _printf - function, output according to a format.
+  * _printf - function to produce output
   * @format: format (char, string, int, dec)
   * Return: size of output text
   */
