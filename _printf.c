@@ -1,4 +1,5 @@
 #include "main.h"
+#include <stdio.h>
 
 /**
  * _printf - produces output accrding to format
@@ -26,7 +27,8 @@ int _printf(const char *format, ...)
 		{
 			return (-1);
 		}
-		else if (format[n] == '%' && (format[n + 1] == 's' ||
+		else if (format[n] == '%' && (format[n + 1] == 'd' ||
+			format[n + 1] == 'i' || format[n + 1] == 's' ||
 			format[n + 1] == 'c' || format[n + 1] == '%'))
 		{
 			sum += (*converter(format[n + 1]))(arguments);
@@ -41,4 +43,3 @@ int _printf(const char *format, ...)
 
 	return (sum);
 }
-
