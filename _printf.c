@@ -1,100 +1,46 @@
-#include <stdarg.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
 #include "main.h"
+#include <stdio.h>
 
 /**
- * _printf - produces output according to a format
- * @format: The specified format
+ * _printf - produces output accrding to format
+ * @format: character string composed of zero or more directives
  *
- * Return: The number of characters that were printed
+ * Return:  the number of characters printed
+ * (excluding the null byte used to end output to strings)
  */
+
 int _printf(const char *format, ...)
 {
-	int i = 0, tmp, processing_escape = FALSE, error = 1, last_token;
-	fmt_info_t fmt_info;
-	va_list args;
+	va_list arguments;
+	unsigned int sum = 0;
+	unsigned int n = 0;
 
-	if (!format || (format[0] == '%' && format[1] == '\0'))
-		return (-1);
-	va_start(args, format);
-	write_to_buffer(0, -1);
-	for (i = 0; format && *(format + i) != '\0'; i++)
+	if (format == NULL)
 	{
-		if (processing_escape)
+		return (-1);
+	}
+
+	va_start(arguments, format);
+	for (; format[n] != '\0'; n++)
+	{
+		if (format[n] == '\0' || (format[n] == '%' && !format[n + 1]))
 		{
-			tmp = read_format_info(format + i, args, &fmt_info, &last_token);
-			processing_escape = FALSE;
-			set_format_error(format, &i, tmp, last_token, &error);
-			if (is_specifier(fmt_info.spec))
-				write_format(&args, &fmt_info);
-			i += (is_specifier(fmt_info.spec) ? tmp : 0);
+			return (-1);
+		}
+		else if (format[n] == '%' && (format[n + 1] == 'd' ||
+			format[n + 1] == 'i' || format[n + 1] == 's' ||
+			format[n + 1] == 'c' || format[n + 1] == '%'))
+		{
+			sum += (*converter(format[n + 1]))(arguments);
+			n++;
 		}
 		else
 		{
-			if (*(format + i) == '%')
-				processing_escape = TRUE;
-			else
-				_putchar(*(format + i));
+			sum += _putchar(format[n]);
 		}
 	}
-	write_to_buffer(0, 1);
-	va_end(args);
-	return (error <= 0 ? error : write_to_buffer('\0', -2));
-}
+	va_end(arguments);
 
-/**
- * write_format - Writes data formatted against some parameters
- * @args_list: The arguments list
- * @fmt_info: The format info parameters that were read
- */
-void write_format(va_list *args_list, fmt_info_t *fmt_info)
-{
-	int i;
-	spec_printer_t spec_printers[] = {
-		{'%', convert_fmt_percent},
-		{'p', convert_fmt_p},
-		{'c', convert_fmt_c},
-		{'s', convert_fmt_s},
-		{'d', convert_fmt_di},
-		{'i', convert_fmt_di},
-		{'X', convert_fmt_xX},
-		{'x', convert_fmt_xX},
-		{'o', convert_fmt_o},
-		{'u', convert_fmt_u},
-		{'b', convert_fmt_b},
-		{'R', convert_fmt_R},
-		{'r', convert_fmt_r},
-		{'S', convert_fmt_S},
-		{'F', convert_fmt_fF},
-		{'f', convert_fmt_fF},
-	};
-
-	for (i = 0; i < 23 && spec_printers[i].spec != '\0'; i++)
-	{
-		if (fmt_info->spec == spec_printers[i].spec)
-		{
-			spec_printers[i].print_arg(args_list, fmt_info);
-			break;
-		}
-	}
-}
-
-/**
- * _putstr - writes the given string to the buffer
- * @str: The string to write
- *
- * Return: On success 1.
- * On error, -1 is returned, and errno is set appropriately.
- */
-int _putstr(char *str)
-{
-	int i, out;
-
-	for (i = 0; str && *(str + i) != 0; i++)
-		out = _putchar(*(str + i));
-	return (out);
+	return (sum);
 }
 
