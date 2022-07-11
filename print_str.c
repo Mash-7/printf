@@ -4,29 +4,24 @@
 
 /**
  * print_str - Prints a strin
- * @arg: The string to be printed.
+ * @S: The string to be printed.
  *
- * Return: The length of the string.
+ * Return: 1.
  */
-int print_str(va_list arg)
+int print_str(va_list S)
 {
 	char *str;
-	int i, len;
+	int i = 0;
 
-	str = va_arg(arg, char *);
+	str = va_arg(S, char *);
+
 	if (str == NULL)
+		str = "(null)";
+
+	while (str[i])
 	{
-		str = "(nill)";
-		len = _strlen(str);
-		for (i = 0; i < len; i++)
-			_putchar(str[i]);
-		return (len);
+		_putchar(str[i]);
+		i++;
 	}
-	else
-	{
-		len = _strlen(str);
-		for (i = 0; i < len; i++)
-			_putchar(str[i]);
-		return (len);
-	}
+	return (i);
 }
